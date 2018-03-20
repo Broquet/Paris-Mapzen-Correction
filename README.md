@@ -11,4 +11,4 @@ OpenStreetMap's data are structured in well-formed XML documents (.osm files) th
 * Nodes: individual dots used to mark specific locations (such as a postal box). Two or more nodes are used to draw line segments or "ways".
 * Ways: a line of nodes, displayed as connected line segments. "Ways" are used to create roads, paths, rivers, etc.
 * Relations: When "ways" or areas are linked in some way but do not represent the same physical thing, a "relation" is used to describe the larger entity they are part of. "Relations" are used to create map features, such as cycling routes, turn restrictions, and areas that are not contiguous. The multiple segments of a long way, such as an interstate or a state highway are grouped into a "relation" for that highway. Another example is a national park with several locations that are separated from each other. Those are also grouped into a "relation".
-* Tags: description of names, types, ... of elements. Like name or type of roads and other attributes.
+* Tags: description of names or types of elements, such as roads and other attributes.
