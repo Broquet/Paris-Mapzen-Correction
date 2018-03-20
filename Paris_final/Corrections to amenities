@@ -1,0 +1,63 @@
+amenity_re = re.compile(r'\S+(\s\S+)*')
+amenities = defaultdict(set)
+
+
+expected_amenities = ["taxi", "financial_advice", "student_accomodation", 
+                    "administration", "foreign_exchange_counter", "conservatory", 
+                    "social_facility", "dojo", "bar", "clinic", "nursery", "bench", 
+                    "logopedia", "post_office", "rectory", "toilets", "bicycle_repair_station", 
+                    "police", "courthouse", "community_centre", "radiologist", "internet_cafe", 
+                    "bench", "kindergarten", "social_club", "animal_welfare", "fuel", "piano", 
+                    "boat_storage", "music_venue", "whirlpool", "shisha_bar", "restaurant","bench"]
+
+
+def audit_amenities(amenities, amenity_name):
+    n = amenity_re.search(amenity_name)
+    if n:
+        amenity_found = n.group()
+        if amenity_found not in expected_amenities:
+            amenities[amenity_found].add(amenity_name)
+
+            
+def is_amenity(elem):
+    return (elem.attrib['k'] == "amenity")
+
+def audit_amenity(osm_file):
+    osm_file = open(osm_file, "r")
+    amenities_types = defaultdict(set)
+    for event, elem in ET.iterparse(osm_file, events=("start",)):
+        if elem.tag == "node" or elem.tag == "way":
+            for tag in elem.iter("tag"):
+                if is_amenity(tag):
+                    audit_amenities(amenities, tag.attrib['v'])
+    #pprint.pprint(dict(amenities))
+    return amenities
+
+amenity_mapping = {
+                    "conservatoire municipal": "conservatory",
+                    "taxi_phone": "taxi",
+                    "bar;pub": "bar",
+                    "bureau_de_change": "foreign_exchange_counter",
+                    "restaurant;bar;nightclub": "restaurant",
+                    "restaurant;bar": "restaurant", 
+                    "bench;waste_basket": "bench"
+                  }
+
+def update_amenity(name, amenity_mapping):
+    for amenity in amenity_mapping:
+        if name in amenity:
+            
+            name = re.sub(r'\b' + re.escape(amenity), amenity_mapping[amenity], name)
+    return name    
+if __name__ == '__main__':
+    audit_amenity(SAMPLE_FILE)
+
+amenities = audit_amenity(SAMPLE_FILE)
+
+i = 0
+for street_type, ways in amenities.iteritems():
+    for name in ways:
+        better_name = update_amenity(name, amenity_mapping)
+        if i < 10: 
+            i += 1
+            print name, "=>", better_name

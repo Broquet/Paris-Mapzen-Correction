@@ -1,0 +1,17 @@
+my_dict = {"test": 1, "test2": 2}
+
+with open('myCSVfile.csv','wb') as f:
+    w = csv.DictWriter(f,my_dict.keys())
+    w.writeheader()
+    w.writerow(my_dict)
+
+    ifile = open("mycsvfile.csv", "rb")
+rownum = 0
+
+for row in ifile:
+    column=0
+    print row
+    if rownum==0:
+        header = row
+        
+ifile.close()

@@ -1,0 +1,5 @@
+countusers = "SELECT COUNT(DISTINCT(e.uid)) FROM (SELECT uid FROM nodes UNION ALL SELECT uid FROM ways) e;"
+
+for i in cur.execute(countusers):
+    print "The number of ways is:"
+    print i

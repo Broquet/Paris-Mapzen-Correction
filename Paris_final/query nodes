@@ -1,0 +1,5 @@
+countnodes = "SELECT COUNT(*) FROM nodes;"
+
+for i in cur.execute(countnodes):
+    print "The number of nodes is:"
+    print i

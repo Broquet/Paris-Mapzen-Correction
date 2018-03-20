@@ -1,0 +1,32 @@
+def populate_expected(street_types, threshold):
+    '''Populates the Expected list
+    
+    Args:
+        street_types (list): A sorted list of (street_type, #_of_appearances).
+        threshold (int): The number of the top elements I want to put in the "expected" list.
+        
+    Returns:
+        list: Returns a list of the x most frequent street types (x defined by "threshold)
+    
+     '''
+    
+    expected = []
+    for i in street_types[:threshold]:
+        expected.append(i[0])
+
+    return expected
+
+    from operator import itemgetter
+
+def sort_street_types(street_types):
+    result = []
+    for key, value in street_types.iteritems():
+        result.append((key, len(value)))
+        result = sorted(list(result), key=itemgetter(0), reverse=True)
+    return result
+
+print("These are the 20 most frequent street types and their frequency:")
+print(" ")
+street_types = sort_street_types(streets)
+#print a samle of the list
+street_types[:20]

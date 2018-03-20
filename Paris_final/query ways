@@ -1,0 +1,5 @@
+countways = "SELECT COUNT(*) FROM ways;"
+
+for i in cur.execute(countways):
+    print "The number of ways is:"
+    print i

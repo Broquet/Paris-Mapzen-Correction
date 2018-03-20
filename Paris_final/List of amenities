@@ -1,0 +1,27 @@
+villages=defaultdict(set)
+postcodes=defaultdict(set)
+amenities=defaultdict(set)
+street=defaultdict(set)
+country=defaultdict(set)
+
+for _, elem in ET.iterparse(SAMPLE_FILE, events=("start",)): 
+    if elem.tag == "node" or elem.tag == "way":
+        for tag in elem.iter("tag"):
+            if (tag.attrib['k'] == "addr:postcode"):
+                postcodes[tag.attrib['v']].add(tag.attrib['v']) 
+            if (tag.attrib['k'] == "addr:city"):
+                villages[tag.attrib['v']].add(tag.attrib['v']) 
+            if (tag.attrib['k'] == "addr:street"):
+                street[tag.attrib['v']].add(tag.attrib['v'])
+            if (tag.attrib['k'] == "addr:country"):
+                country[tag.attrib['v']].add(tag.attrib['v'])
+            if (tag.attrib['k'] == "amenity") :
+                amenities[tag.attrib['v']].add(tag.attrib['v'])
+ 
+print "There are %s amenities in Paris. These are a sample of 10 amenities:" % len(amenities)
+
+print(" ")
+for idx, line in enumerate(amenities):
+    if idx >= 10:
+        break
+    print line

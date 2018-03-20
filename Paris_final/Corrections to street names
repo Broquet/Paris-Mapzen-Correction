@@ -1,0 +1,77 @@
+street_type_re = re.compile (r'^\w+\.\\?', re.I|re.U)
+expected = ["Villa", "Terrace", "Route", "Rue", "Rond-", "Quai", "Promenade", "Place", "Passage"]
+
+mapping = {
+    'villa': 'Villa',
+    'VIlla': 'Villa',
+    'terrasse': 'Terrace',
+    "u'route": 'Route',
+    'rue': 'Rue',
+    'rond-': 'Rond-',
+    'r': 'Rue',
+    'quai': 'Quai',
+    'promené': 'Promenade',
+    "u'promen\xe9": 'Promenade',
+    'place': 'Place',
+    "u'Place": 'Place',
+    'passage': 'Passage',
+    'esplanade': 'Esplanade',
+    'cours': 'Cours',
+    "boulevard": 'Boulevard',
+    'bouleard': 'Boulevard'
+}
+
+def get_street_names(tree):
+    result = {}
+    for path in ["./node", "./way"]:
+        for element in tree.findall(path):
+            try:
+                result[element.get('id')] = check_for_street(element).get('v')
+            except (AttributeError):  #chk_for_street() returns nothing
+                continue
+    return result
+
+tree = ET.parse(myfileparis)
+root = tree.getroot()
+
+street_names = get_street_names(root)
+pprint.pprint(dict(street_names.items()[:10]))
+
+def update_street_type(tree):
+    changes = {}
+    for path in ["./node", "./way"]:
+        for element in tree.findall(path):
+            try:
+                tag = check_for_street(element)
+                street_name = tag.get('v')
+            except (AttributeError
+                    ):  #In case element doesn't have "street name" attribute
+                continue
+            try:
+                street_type = st_types_re.findall(street_name)[0].strip()
+            except (IndexError):
+                #Leaves the problematic street names as is.
+                #They are already in the PROBLEMATICS list.
+                street_type = street_name
+
+            if street_type in mapping:
+                tag.attrib['v'] = tag.attrib['v'].replace(street_type,
+                                                          mapping[street_type])
+
+                if street_name not in changes:
+                    changes[street_name] = [tag.attrib['v'], 1]
+                else:
+                    changes[street_name][1] += 1
+    counter = 0
+    for key, value in changes.iteritems():
+        counter += value[1]
+        if value[1] == 1:
+            print key + ' ==> ' + value[0]
+        else:
+            print key + ' ==> ' + value[0] + " " + "(" + str(value[
+                1]) + " occurrences" + ")"
+    print str(counter) + " street names were fixed"
+    update_street_type.called = True
+
+update_street_type.called = False
+update_street_type(root)

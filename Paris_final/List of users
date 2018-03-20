@@ -1,0 +1,17 @@
+def process_map(filename): 
+    users = set()
+    for _, element in ET.iterparse(filename): 
+        if 'user' in element.attrib:
+            users.add(element.attrib['user']) 
+            
+    return users
+    
+paris_users = process_map(SAMPLE_FILE) 
+print "There are %s users that added information on Openstreetmap about Paris. These are a sample of 10 users:" % len(paris_users)
+
+print(" ")
+
+for idx, line in enumerate(paris_users):
+    if idx >= 10:
+        break
+    print line

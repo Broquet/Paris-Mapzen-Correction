@@ -1,0 +1,16 @@
+def count_tags(SAMPLE_FILE): 
+    tags = {}
+    for event, elem in ET.iterparse(SAMPLE_FILE): 
+        if elem.tag in tags:
+            tags[elem.tag] += 1 
+        else:
+            tags[elem.tag] = 1 
+    return tags
+
+tag_view = count_tags(SAMPLE_FILE)
+#pprint.pprint(overview_tags)
+
+print("In the dataset, there are the following elements:")
+print(" ")
+for k, v in tag_view.items(): 
+    print k,v

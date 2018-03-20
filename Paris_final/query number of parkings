@@ -1,0 +1,5 @@
+countparking = "SELECT value, COUNT(*) FROM nodes_tags WHERE key='amenity' AND value='parking' GROUP BY value;"
+
+for i in cur.execute(countparking):
+
+    print i

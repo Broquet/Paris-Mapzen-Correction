@@ -1,0 +1,7 @@
+# Top 5 amenities
+
+topamenities = "SELECT value, COUNT(*) as num FROM nodes_tags WHERE key='amenity' GROUP BY value ORDER BY num DESC LIMIT 5;"
+
+for row in cur.execute(topamenities):
+
+    print row

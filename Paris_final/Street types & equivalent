@@ -1,0 +1,19 @@
+from difflib import get_close_matches
+
+def populate_expected(street_types, threshold):
+    expected = []
+    for i in street_types[:threshold]:
+        expected.append(i[0])
+
+    return expected
+
+EXPECTED = populate_expected(street_types, 20)
+EXPECTED
+
+
+def find_abbreviations(expected, data):
+    for i in expected:
+        print i, get_close_matches(i, data, 4, 0.5)
+
+find_abbreviations(EXPECTED, list(streets.keys()))
+

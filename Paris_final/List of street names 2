@@ -1,0 +1,17 @@
+st_types_re = re.compile(r'[a-zA-Z]+[^0-9]\b\.?')
+PROBLEMATICS = []
+
+
+def audit_st_types(streets):
+    result = defaultdict(set)
+    for key, value in streets.iteritems():
+        try:
+            street_type = st_types_re.findall(value)[0].strip()
+        except (IndexError):  #One word or empty street names
+            PROBLEMATICS.append((key, 'street name', value))
+        result[street_type].add(value)
+
+    return result
+
+streets = audit_st_types(street_names)
+pprint.pprint(dict(streets.items()[:5]))

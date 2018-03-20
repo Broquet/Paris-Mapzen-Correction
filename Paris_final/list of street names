@@ -1,0 +1,38 @@
+tree = ET.parse(SAMPLE_FILE)
+root = tree.getroot()
+
+def chk_for_street(element):
+    highway_types = [
+        'living_street', 'motorway', 'primary', 'residential', 'secondary',
+        'tertiary'
+    ]
+    tag = element.find("./tag[@k='addr:street']")
+    if tag is None:
+        if element.tag == 'way':
+            tag = element.find("./tag[@k='highway']")
+            try:
+                if tag.get('v') in highway_types:
+                    return element.find("./tag[@k='name']")
+            except AttributeError:
+                return
+    else:
+        return tag
+    return
+
+
+def get_street_names(tree):
+    result = {}
+    for path in ["./node", "./way"]:
+        for element in tree.findall(path):
+            try:
+                result[element.get('id')] = chk_for_street(element).get('v')
+            except (AttributeError):  #chk_for_street() returns nothing
+                continue
+    return result
+
+
+street_names = get_street_names(root)
+
+#Sample of the dictionary
+
+pprint.pprint(dict(street_names.items()[:10]))
